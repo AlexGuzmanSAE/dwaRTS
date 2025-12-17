@@ -8,6 +8,7 @@
 #include "EnhancedActionKeyMapping.h"
 #include "InputActionValue.h"
 #include "RTS_HUD.h"
+#include "CommonENUMs.h"
 #include <Base_Pawn.h>
 
 ARTS_PlayerController::ARTS_PlayerController()
