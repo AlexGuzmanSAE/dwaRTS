@@ -8,6 +8,9 @@
 #include "Base_Building.generated.h"
 
 class UBoxComponent;
+struct FInputActionVale;
+struct FInputActionValue;
+class UInputAction;
 
 UCLASS()
 class STARTS_API ABase_Building : public AActor, public IISelectable
@@ -19,6 +22,21 @@ class STARTS_API ABase_Building : public AActor, public IISelectable
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Building, meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<UStaticMeshComponent> selectedIndicator;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"));
+	TObjectPtr<UInputAction> placeBuildingAction;
+
+	UPROPERTY()
+	FTimerHandle validationTimerHandle;
+	
+	UPROPERTY()
+	FName requiredTag = "CanPlaceBuilding";
+	
+	UPROPERTY()
+	bool canPlaceBuilding = false;
+
+	UPROPERTY()
+	FVector buildAreaExtents = FVector(500.f, 500.f, 500.f);
 
 public:	
 	// Sets default values for this actor's properties
@@ -33,4 +51,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SelectActor_Implementation(const bool isSelected);
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void EnablePlacingMode();
+	void CheckLocationValid();
+	void PlaceBuilding(const FInputActionValue& value);
+	void CancelBuildingPlacement(const FInputActionValue& value);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Building")
+	void ToggleBuildingValidity(bool isValid);
 };
