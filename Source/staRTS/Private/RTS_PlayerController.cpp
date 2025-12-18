@@ -8,6 +8,9 @@
 #include "EnhancedActionKeyMapping.h"
 #include "InputActionValue.h"
 #include "RTS_HUD.h"
+#include "IWorkerInterface.h"
+#include "ResourceCollectable.h"
+#include "IStorageInterface.h"
 #include "CommonENUMs.h"
 #include <Base_Pawn.h>
 
@@ -82,29 +85,36 @@ void ARTS_PlayerController::Select(const FInputActionValue& value)
 
 void ARTS_PlayerController::CommandSelectedActors(const FInputActionValue& value)
 {	
-	if (bIsIssuingCommand)
-	{
-		return;
-	}
+	if (bIsIssuingCommand) return;
+	
 
-	if (!hitActor)
-	{
-		return;
-	}
-
+	if (!hitActor) return;
+	
 	FHitResult hitResult;
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, false, hitResult);
-
+	AActor* targetActor = hitResult.GetActor();
 	if (!hitResult.bBlockingHit) return;
 
 	if(currentlySelectedActors.Num() > 0)
 	{
-		for (AActor* anActor : currentlySelectedActors)
+		for (AActor* selectedActor : currentlySelectedActors)
 		{
-			if (anActor && anActor->GetClass()->ImplementsInterface(UNavegable_Interface::StaticClass()))
-			{
-				INavegable_Interface::Execute_MoveToLocation(anActor, hitResult.Location);
-			}
+			if (!selectedActor) continue;
+			
+			// if (hitResult && targetActor->GetClass()->ImplementsInterface(IResourceCollectable::StaticClass()))
+			// {
+			// 	if (selectedActor->GetClass()->ImplementsInterface(IIWorkerInterface::StaticClass()))
+			// 	{
+			// 		IIWorkerInterface::Execute_GatherResource(selectedActor, targetActor);
+			// 	}
+			// }
+			// else
+			// {
+			// 	if (selectedActor->GetClass()->ImplementsInterface(UNavegable_Interface::StaticClass()))
+			// 	{
+			// 		INavegable_Interface::Execute_MoveToLocation(selectedActor, hitResult.Location);
+			// 	}
+			// }
 		}
 	}
 	else

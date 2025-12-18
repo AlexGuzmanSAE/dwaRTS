@@ -20,7 +20,10 @@ public class staRTS : ModuleRules
 			"GameplayStateTreeModule",
 			"Niagara",
 			"UMG",
-			"Slate"
+			"Slate",
+			"GameplayMessageRuntime",
+			"GameplayTags", 
+			"GameplayAbilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

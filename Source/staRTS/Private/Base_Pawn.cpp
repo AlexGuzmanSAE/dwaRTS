@@ -103,3 +103,16 @@ void ABase_Pawn::MoveToLocation_Implementation(const FVector targetLocation)
 	pawnAIController->MoveToLocation(targetLocation, minDistanceToTarget);
 }
 
+void ABase_Pawn::GatherResource_Implementation(AActor* ResourceActor)
+{
+}
+
+void ABase_Pawn::DeliverResource_Implementation(AActor* StorageActor)
+{
+}
+
+bool ABase_Pawn::IsCarryingResources_Implementation()
+{
+	return true;
+}
+

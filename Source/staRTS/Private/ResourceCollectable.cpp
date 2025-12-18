@@ -1,0 +1,4 @@
+
+
+#include "ResourceCollectable.h"
+
