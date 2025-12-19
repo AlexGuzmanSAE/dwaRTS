@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "InputActionValue.h"
+#include "IStorageInterface.h"
 #include "EnhancedInputComponent.h"
 
 ABase_Building::ABase_Building()

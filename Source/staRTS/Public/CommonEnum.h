@@ -1,15 +1,31 @@
-
-// CommonEnums.h
 #pragma once
+
 #include "CoreMinimal.h"
-#include "CommonEnum.generated.h" 
+#include "CommonEnum.generated.h"  // <-- CORREGIDO: "CommonEnums.generated.h"
 
 UENUM(BlueprintType)
 enum class EResourceType : uint8
 {
-    None = 0,
-    Wood  UMETA(DisplayName = "Wood"),
+    None UMETA(DisplayName = "None"),
+    Gold UMETA(DisplayName = "Gold"),
+    Wood UMETA(DisplayName = "Wood"),
     Stone UMETA(DisplayName = "Stone"),
-    Gold  UMETA(DisplayName = "Gold"),
-    Food  UMETA(DisplayName = "Food")
+    Food UMETA(DisplayName = "Food")
+};
+
+USTRUCT(BlueprintType)
+struct FResourcePair
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resources")
+    EResourceType rType = EResourceType::Gold;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resources")
+    float amount = 0.0f;
+
+    FResourcePair() : rType(EResourceType::Gold), amount(0.0f) {}
+
+    FResourcePair(EResourceType InType, float InAmount)
+        : rType(InType), amount(InAmount) {}
 };

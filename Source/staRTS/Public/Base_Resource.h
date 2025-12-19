@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,28 +7,50 @@
 #include "Base_Resource.generated.h"
 
 
-struct ResourcePair
-{
-	EResourceType rType;
-	float amount;
-};
 
 UCLASS()
 class STARTS_API ABase_Resource : public AActor, public IResourceCollectable
 {
 	GENERATED_BODY()
-	
-public:	
+    
+public: 
 	ABase_Resource();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Type, meta = (AllowPrivateAccess = "true"));
+
+	// Resource configuration
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 	EResourceType resourceType;
-	ResourcePair structTypePair;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
+	float maxAmount = 1000.0f;
+
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Resource")
+	float currentAmount;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Resource")
+	FResourcePair structTypePair;
+
+	// Called when resource is fully depleted
+	virtual void OnResourceDepleted();
+
+public: 
 	virtual void Tick(float DeltaTime) override;
 
-	virtual ResourcePair ExtractResource_Implementation(float AmountToExtract);
+	// IResourceCollectable Interface
+	virtual FResourcePair ExtractResource_Implementation(float AmountToExtract) override;
+
+	// Blueprint accessible functions
+	UFUNCTION(BlueprintCallable, Category = "Resource")
+	float GetRemainingAmount() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Resource")
+	float GetMaxAmount() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Resource")
+	bool IsDepleted() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Resource")
+	float GetResourcePercentage() const;
 };

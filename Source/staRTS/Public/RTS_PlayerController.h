@@ -6,7 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "RTS_PlayerController.generated.h"
 
-
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -16,45 +15,55 @@ class ARTS_HUD;
 UCLASS()
 class STARTS_API ARTS_PlayerController : public APlayerController
 {
-	GENERATED_BODY()
-	
-public :
+    GENERATED_BODY()
+    
+public:
+    ARTS_PlayerController();
 
-	ARTS_PlayerController();
+    UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+    UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(EditDefaultsOnly, Category = Input, meta = (AllowPrivateAccess = "true"));
-	UInputMappingContext* DefaultMappingContext;
+    bool bIsIssuingCommand = false;
+    FTimerHandle CommandCooldownTimer;
 
-	bool bIsIssuingCommand = false;
-	FTimerHandle CommandCooldownTimer;
+    // Set a default storage for all workers
+    UFUNCTION(BlueprintCallable, Category = "RTS")
+    void SetDefaultStorage(AActor* StorageActor);
 
 protected:
+    virtual void BeginPlay() override;
+    virtual void SetupInputComponent() override;
 
-	virtual void BeginPlay() override;
+    // Input Actions
+    void Select(const FInputActionValue& value);
+    void CommandSelectedActors(const FInputActionValue& value);
+    void SelectStart(const FInputActionValue& value);
+    void SelectOnGoing(const FInputActionValue& value);
+    void SelectEnd(const FInputActionValue& value);
+    void SelectMultipleActors();
 
-	virtual void SetupInputComponent() override;
-	void Select(const FInputActionValue& value);
-	void CommandSelectedActors(const FInputActionValue& value);
-	void SelectStart(const FInputActionValue& value);
-	void SelectOnGoing(const FInputActionValue& value);
-	void SelectEnd(const FInputActionValue& value);
-	void SelectMultipleActors();
+    // Helper Functions
+    void ProcessCommand(AActor* CommandedActor, AActor* TargetActor, FVector TargetLocation);
+    AActor* FindNearestStorage(FVector FromLocation);
+    void FindDefaultStorage();
 
-	UPROPERTY();
-	TObjectPtr<AActor> hitActor;
+    UPROPERTY()
+    TObjectPtr<AActor> hitActor;
 
+    UPROPERTY()
+    TObjectPtr<ARTS_HUD> rtsHUD;
 
-	UPROPERTY();
-	TObjectPtr<ARTS_HUD> rtsHUD;
+    UPROPERTY()
+    AActor* DefaultStorageActor;
+
 private:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> selectAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"));
-	TObjectPtr<UInputAction> selectAction;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> commandAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"));
-	TObjectPtr<UInputAction> commandAction;
-
-	FVector2D selectionStartPoint;
-	FVector2D selectionSize;
-	TArray<AActor*> currentlySelectedActors;
+    FVector2D selectionStartPoint;
+    FVector2D selectionSize;
+    TArray<AActor*> currentlySelectedActors;
 };

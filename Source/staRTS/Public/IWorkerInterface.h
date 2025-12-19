@@ -20,7 +20,12 @@ class STARTS_API IIWorkerInterface
 	GENERATED_BODY()
 
 public:
-	virtual void GatherResource(AActor* ResourceActor) = 0;
-	virtual void DeliverResource(AActor* StorageActor) = 0;
-	virtual bool IsCarryingResources() const = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Worker")
+	void GatherResource(AActor* ResourceActor);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Worker")
+	void DeliverResource(AActor* StorageActor);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Worker")
+	bool IsCarryingResources() const;
 };

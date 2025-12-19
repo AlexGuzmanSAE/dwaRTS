@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ISelectable.h"
+#include "IStorageInterface.h"
 #include "Base_Building.generated.h"
 
 class UBoxComponent;
@@ -13,7 +14,7 @@ struct FInputActionValue;
 class UInputAction;
 
 UCLASS()
-class STARTS_API ABase_Building : public AActor, public IISelectable
+class STARTS_API ABase_Building : public AActor, public IISelectable, public IIStorageInterface
 {
 	GENERATED_BODY()
 
