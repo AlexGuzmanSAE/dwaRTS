@@ -51,16 +51,15 @@ void ABase_Pawn::BeginPlay()
     TargetResourceActor = nullptr;
     TargetStorageActor = nullptr;
     AvailableResources.Empty();
-    AvailableStorages.Empty(); // Limpiar también la lista de almacenes
-
-    // Delay de inicialización para esperar a que World Partition cargue los actores
+    AvailableStorages.Empty(); 
+    
     FTimerHandle InitDelayHandle;
     GetWorld()->GetTimerManager().SetTimer(InitDelayHandle, [this]()
     {
         if (IsValid(this) && GetWorld())
         {
             CacheAllResources();
-            CacheAllStorages(); // <--- IMPORTANTE cachear ambos
+            CacheAllStorages(); 
             
             UE_LOG(LogTemp, Log, TEXT("Worker %s: %d Resources, %d Storages found"), 
                    *GetName(), AvailableResources.Num(), AvailableStorages.Num());
@@ -119,7 +118,6 @@ void ABase_Pawn::SelectActor_Implementation(const bool isSelected)
 
 void ABase_Pawn::MoveToLocation_Implementation(const FVector targetLocation)
 {
-    // 1. Verificación básica
     if (!IsValid(this)) return;
 
     if (CurrentWorkerState != EWorkerState::Idle)
@@ -130,7 +128,6 @@ void ABase_Pawn::MoveToLocation_Implementation(const FVector targetLocation)
 
     moveTargetLocation = targetLocation + FVector(0, 0, GetDefaultHalfHeight());
 
-    // En lugar de castear cada vez, verifica si el Controller es válido primero
     AController* CurrentController = GetController();
     if (!CurrentController)
     {
@@ -141,7 +138,6 @@ void ABase_Pawn::MoveToLocation_Implementation(const FVector targetLocation)
     AAIController* pawnAIController = Cast<AAIController>(CurrentController);
     if (pawnAIController)
     {
-        // Forzamos el stop antes de una nueva orden para limpiar el PathFollowing
         pawnAIController->StopMovement(); 
         
         bMoving = true;
@@ -149,25 +145,17 @@ void ABase_Pawn::MoveToLocation_Implementation(const FVector targetLocation)
     }
 }
 
-// ===============================================
-// WORKER INTERFACE IMPLEMENTATION
-// ===============================================
-
 void ABase_Pawn::GatherResource_Implementation(AActor* ResourceActor)
 {
-    // LOGS CRÍTICOS PRIMERO
     UE_LOG(LogTemp, Warning, TEXT("=== GatherResource ENTRY ==="));
     UE_LOG(LogTemp, Warning, TEXT("ResourceActor pointer: %p"), ResourceActor);
     
-    // 1. VERIFICACIÓN DE NULIDAD (Crucial para evitar el 0x00000018)
     if (!ResourceActor || !IsValid(ResourceActor))
     {
         UE_LOG(LogTemp, Error, TEXT("GatherResource: ResourceActor es nulo o inválido!"));
         return;
     }
-
-    // 2. VERIFICACIÓN DE INTERFAZ
-    // Nota: Usamos GetClass()->ImplementsInterface para mayor seguridad en Blueprints
+    
     if (!ResourceActor->GetClass()->ImplementsInterface(UResourceCollectable::StaticClass()))
     {
         UE_LOG(LogTemp, Error, TEXT("GatherResource: %s no implementa la interfaz de recurso"), *ResourceActor->GetName());
@@ -188,7 +176,6 @@ void ABase_Pawn::GatherResource_Implementation(AActor* ResourceActor)
 
 void ABase_Pawn::DeliverResource_Implementation(AActor* StorageActor)
 {
-    // Si nos pasan un nulo, intentamos buscar el más cercano por nuestra cuenta
     AActor* ActualStorage = StorageActor;
     if (!IsValid(ActualStorage))
     {
@@ -222,16 +209,12 @@ bool ABase_Pawn::IsCarryingResources_Implementation() const
     return CurrentAmount > 0.0f;
 }
 
-// ===============================================
-// HELPER FUNCTIONS
-// ===============================================
 
 void ABase_Pawn::UpdateWorkerState()
 {
     switch (CurrentWorkerState)
     {
         case EWorkerState::Idle:
-            // Wait for commands - don't do anything
             break;
 
         case EWorkerState::MovingToResource:
@@ -239,11 +222,9 @@ void ABase_Pawn::UpdateWorkerState()
             CurrentWorkerState = EWorkerState::Idle;
             break;
         }
-
-        // USAREMOS GetDistanceTo que es más fiable que FVector::Dist
+        
         if (GetDistanceTo(TargetResourceActor) <= GatheringRange)
         {
-            // IMPORTANTE: Primero cambiamos el estado, LUEGO paramos el movimiento
             CurrentWorkerState = EWorkerState::Gathering;
         
             AAIController* AIC = Cast<AAIController>(GetController());
@@ -257,15 +238,12 @@ void ABase_Pawn::UpdateWorkerState()
             break;
 
         case EWorkerState::Gathering:
-            // Gathering is handled by timer
-            // Check if resource is still valid
             if (!TargetResourceActor || !IsValid(TargetResourceActor))
             {
                 StopGathering();
                 CurrentWorkerState = EWorkerState::Idle;
                 TargetResourceActor = nullptr;
                 
-                // If carrying resources, try to deliver
                 if (CurrentAmount > 0.0f && TargetStorageActor && IsValid(TargetStorageActor))
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Worker %s: Deberia ir a storage"), *GetName());
@@ -274,13 +252,11 @@ void ABase_Pawn::UpdateWorkerState()
                 }
                 break;
             }
-            
-            // Check if inventory full
+        
             if (CurrentAmount >= MaxCapacity)
             {
                 StopGathering();
                 
-                // If we have resources, deliver them
                 if (CurrentAmount > 0.0f && TargetStorageActor && IsValid(TargetStorageActor))
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Worker %s: Deberia ir a storage FULL INVENTORY"), *GetName());
@@ -296,7 +272,7 @@ void ABase_Pawn::UpdateWorkerState()
             break;
 
     case EWorkerState::MovingToStorage:
-        // 1. Si el almacén ya no es válido, buscamos el más cercano de la lista que cacheamos
+
         if (!IsValid(TargetStorageActor))
         {
             UE_LOG(LogTemp, Warning, TEXT("Storage perdido, buscando uno nuevo..."));
@@ -314,12 +290,9 @@ void ABase_Pawn::UpdateWorkerState()
             }
             break;
         }
-    
-        // 2. Verificación de llegada (Rango + Parada de movimiento)
-        // Usamos el rango directamente para evitar que el trabajador se quede "bailando" cerca del almacén
+        
         if (IsInRangeOf(TargetStorageActor, DeliveryRange))
         {
-            // Detenemos la IA para que no intente seguir caminando dentro del edificio
             AAIController* AIC = Cast<AAIController>(GetController());
             if (AIC) AIC->StopMovement();
         
@@ -332,7 +305,6 @@ void ABase_Pawn::UpdateWorkerState()
         break;
 
         case EWorkerState::Delivering:
-            // Delivery is instant, state changes after CompleteDelivery
             break;
     }
 }
@@ -344,7 +316,6 @@ AActor* ABase_Pawn::GetBestResource()
         return nullptr;
     }
     
-    // Filtrar recursos válidos y no depletos
     TArray<AActor*> ValidResources;
     for (AActor* Resource : AvailableResources)
     {
@@ -358,7 +329,6 @@ AActor* ABase_Pawn::GetBestResource()
             continue;
         }
         
-        // Verificar si tiene recursos (extract 0 para testear)
         FResourcePair testExtract = IResourceCollectable::Execute_ExtractResource(Resource, 0.0f);
         if (testExtract.rType != EResourceType::None)
         {
@@ -372,7 +342,6 @@ AActor* ABase_Pawn::GetBestResource()
         return nullptr;
     }
     
-    // Encontrar el más cercano
     AActor* BestResource = nullptr;
     float ClosestDistance = FLT_MAX;
     
@@ -426,7 +395,6 @@ void ABase_Pawn::CacheAllStorages()
 
 AActor* ABase_Pawn::FindNearestStorage(FVector FromLocation)
 {
-    // Si la lista está vacía o hay dudas, recacheamos rápidamente
     if (AvailableStorages.Num() == 0) CacheAllStorages();
 
     AActor* BestStorage = nullptr;
@@ -455,14 +423,12 @@ void ABase_Pawn::StartGathering()
     }
     CurrentAmount = 0.0f;
     GetWorld()->GetTimerManager().ClearTimer(GatheringTimerHandle);
-    // Face the resource
     FVector directionToResource = (TargetResourceActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
     FRotator lookAtRotation = directionToResource.Rotation();
     lookAtRotation.Pitch = 0.f;
     lookAtRotation.Roll = 0.f;
     SetActorRotation(lookAtRotation);
-
-    // Start gathering timer (every second)
+    
     GetWorld()->GetTimerManager().SetTimer(
         GatheringTimerHandle,
         this,
@@ -483,7 +449,6 @@ void ABase_Pawn::StopGathering()
 void ABase_Pawn::ProcessGathering()
 {
     UE_LOG(LogTemp, Warning, TEXT("%f"), CurrentAmount);
-    // Verificación doble
     if (!IsValid(TargetResourceActor))
     {
         UE_LOG(LogTemp, Warning, TEXT("TargetResourceActor is no longer valid!"));
@@ -501,8 +466,7 @@ void ABase_Pawn::ProcessGathering()
         TargetResourceActor = nullptr;
         return;
     }
-
-    // Calculate how much we can gather
+    
     float remainingCapacity = MaxCapacity - CurrentAmount;
     float amountToGather = FMath::Min(GatheringRate, remainingCapacity);
 
@@ -510,7 +474,6 @@ void ABase_Pawn::ProcessGathering()
     {
         StopGathering();
         
-        // Inventory full, move to storage
         if (TargetStorageActor && IsValid(TargetStorageActor))
         {
             CurrentWorkerState = EWorkerState::MovingToStorage;
@@ -523,16 +486,14 @@ void ABase_Pawn::ProcessGathering()
         }
         return;
     }
-
-    // Extraer recurso solo si el actor es válido
+    
     if (IsValid(TargetResourceActor))
     {
         FResourcePair extractedResource = IResourceCollectable::Execute_ExtractResource(
             TargetResourceActor, 
             amountToGather
         );
-
-        // Add to inventory
+        
         CurrentAmount += extractedResource.amount;
         CurrentResourceType = extractedResource.rType;
 
@@ -541,15 +502,13 @@ void ABase_Pawn::ProcessGathering()
                *UEnum::GetValueAsString(CurrentResourceType),
                CurrentAmount, 
                MaxCapacity);
-
-        // Check if resource is depleted
+        
         if (extractedResource.amount <= 0.0f)
         {
             UE_LOG(LogTemp, Warning, TEXT("Resource depleted"));
             StopGathering();
             TargetResourceActor = nullptr;
             
-            // Move to storage with what we have
             if (CurrentAmount > 0.0f && TargetStorageActor && IsValid(TargetStorageActor))
             {
                 CurrentWorkerState = EWorkerState::MovingToStorage;
@@ -573,14 +532,11 @@ void ABase_Pawn::CompleteDelivery()
 {
     if (IsValid(TargetStorageActor))
     {
-        // Ejecutar la interfaz para depositar
         IIStorageInterface::Execute_DepositResource(TargetStorageActor, CurrentResourceType, CurrentAmount);
         
-        // Resetear inventario local
         CurrentAmount = 0.0f;
         CurrentResourceType = EResourceType::None;
-
-        // BUCLE AUTOMÁTICO: Regresar al recurso original
+        
         if (IsValid(TargetResourceActor))
         {
             CurrentWorkerState = EWorkerState::MovingToResource;
@@ -589,7 +545,6 @@ void ABase_Pawn::CompleteDelivery()
         }
         else
         {
-            // Si el recurso se agotó, buscamos el siguiente mejor (el más cercano)
             AActor* nextResource = GetBestResource();
             if (nextResource)
             {
@@ -629,21 +584,18 @@ void ABase_Pawn::SetTargetStorage(AActor* StorageActor)
 
 void ABase_Pawn::CancelCurrentTask()
 {
-    // Stop gathering if currently gathering
     if (CurrentWorkerState == EWorkerState::Gathering)
     {
         StopGathering();
     }
-
-    // Stop movement
+    
     bMoving = false;
     AAIController* AIController = Cast<AAIController>(GetController());
     if (AIController)
     {
         AIController->StopMovement();
     }
-
-    // Clear targets and go idle
+    
     TargetResourceActor = nullptr;
     CurrentWorkerState = EWorkerState::Idle;
     

@@ -69,9 +69,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RTS | Inventory")
     float MaxCapacity = 500.0f;
 
-    // Resource Gathering Settings
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RTS | Gathering")
-    float GatheringRate = 50.0f; // Amount per second
+    float GatheringRate = 50.0f; 
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RTS | Gathering")
     float GatheringRange = 250.0f;
@@ -88,7 +87,7 @@ public:
     TArray<AActor*> AvailableStorages;
     UPROPERTY()
     TArray<AActor*> AvailableResources;
-    // Target References
+
     UPROPERTY()
     AActor* TargetResourceActor;
 
@@ -96,10 +95,10 @@ public:
     AActor* TargetStorageActor;
 
     AActor* FindNearestStorage(FVector FromLocation);
-    // Timers
+
     FTimerHandle GatheringTimerHandle;
     
-    // Helper Functions
+
     void StartGathering();
     void StopGathering();
     void ProcessGathering();
@@ -111,18 +110,14 @@ public:
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    // IISelectable Interface
     virtual void SelectActor_Implementation(const bool isSelected) override;
-    
-    // INavegable_Interface
+
     virtual void MoveToLocation_Implementation(const FVector targetLocation) override;
     
-    // IIWorkerInterface Interface
     virtual void GatherResource_Implementation(AActor* ResourceActor) override;
     virtual void DeliverResource_Implementation(AActor* StorageActor) override;
     virtual bool IsCarryingResources_Implementation() const override;
-
-    // Public helper functions
+    
     UFUNCTION(BlueprintCallable, Category = "RTS | Worker")
     void SetTargetStorage(AActor* StorageActor);
 
@@ -135,6 +130,5 @@ public:
     UFUNCTION(BlueprintCallable, Category = "RTS | Worker")
     float GetCurrentResourceAmount() const { return CurrentAmount; }
 
-    // AI Move callback (not a UFUNCTION, bound via AddUObject)
     void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result);
 };

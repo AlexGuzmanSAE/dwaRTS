@@ -7,23 +7,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a91d0c20-7125-44f5-b17b-c1733842b052" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.staRTS.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Gud_BPs/BP_RTS_PlayerState.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gud_BPs/BP_RTS_PlayerState.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/4/S9/QBZHLLV6PXAF693L5X19KC.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/4/S9/QBZHLLV6PXAF693L5X19KC.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Private/Base_Building.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Private/Base_Building.cpp" afterDir="false" />
+    <list default="true" id="e2f4dcbd-962c-4717-92ec-9c0dee8e69ef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.staRTS.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.staRTS.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vsconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/WBP_HUD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/WBP_HUD.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/4/3R/FBA0Z00NHOZRLY2VS6QWS5.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/4/3R/FBA0Z00NHOZRLY2VS6QWS5.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/6/4L/5H5JZNFWDTGOQL00BFN5NL.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/9/63/V4RZUO8QV849E6LVLEVEZ5.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/9/63/V4RZUO8QV849E6LVLEVEZ5.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/TopDown/Lvl_TopDown/B/U1/EWIU5RUI0238ITBT2D2IQK.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/staRTS/Private/Base_Pawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Private/Base_Pawn.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/staRTS/Private/Base_Resource.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Private/Base_Resource.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/staRTS/Private/RTS_PlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Private/RTS_PlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/Base_Building.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/Base_Building.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/Base_Pawn.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/Base_Pawn.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/Base_Resource.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/Base_Resource.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/CommonEnum.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/CommonEnum.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/IStorageInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/IStorageInterface.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/IWorkerInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/IWorkerInterface.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/RTS_PlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/RTS_PlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/staRTS/Public/ResourceCollectable.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/staRTS/Public/ResourceCollectable.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,18 +32,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.6/Engine/Source/Developer/LauncherServices/Private/Launcher/LauncherProjectPath.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.6/Engine/Source/Runtime/Core/Core.Build.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.6/Engine/Source/Runtime/Core/Private/ProfilingDebugging/Microsoft/EventTracingForWindows.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.6/Engine/Source/Runtime/Core/Private/ProfilingDebugging/PlatformEvents.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.6/Engine/Source/Runtime/Core/Public/ProfilingDebugging/PlatformEvents.h" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "customColor": "",
   "associatedIndex": 8
 }]]></component>
-  <component name="ProjectId" id="373XRnvtdwxEqbUtN7IyA3a6dWK" />
+  <component name="ProjectId" id="374JfsiwpEtCYJnfXKu549zj9YU" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -145,13 +134,13 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a91d0c20-7125-44f5-b17b-c1733842b052" name="Changes" comment="" />
+      <changelist id="e2f4dcbd-962c-4717-92ec-9c0dee8e69ef" name="Changes" comment="" />
       <created>1766018579985</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1766018579985</updated>
       <workItem from="1766018581132" duration="7000" />
-      <workItem from="1766132735422" duration="9701000" />
+      <workItem from="1766156538379" duration="1043000" />
     </task>
     <servers />
   </component>

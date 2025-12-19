@@ -4,7 +4,6 @@ ABase_Resource::ABase_Resource()
 {
     PrimaryActorTick.bCanEverTick = false;
     
-    // Initialize with default values
     resourceType = EResourceType::Gold;
     currentAmount = 1000.0f;
     maxAmount = 1000.0f;
@@ -14,10 +13,8 @@ void ABase_Resource::BeginPlay()
 {
     Super::BeginPlay();
     
-    // Initialize current amount to max
     currentAmount = maxAmount;
     
-    // Create the resource pair
     structTypePair = FResourcePair(resourceType, currentAmount);
 }
 
@@ -30,7 +27,6 @@ FResourcePair ABase_Resource::ExtractResource_Implementation(float AmountToExtra
 {
     FResourcePair result;
     
-    // Check if resource is depleted
     if (currentAmount <= 0.0f)
     {
         result.rType = EResourceType::None;
@@ -38,12 +34,10 @@ FResourcePair ABase_Resource::ExtractResource_Implementation(float AmountToExtra
         UE_LOG(LogTemp, Warning, TEXT("Resource %s is completely depleted!"), *GetName());
         return result;
     }
-
-    // Calculate actual amount to extract (can't extract more than available)
+    
     float extractedAmount = FMath::Min(AmountToExtract, currentAmount);
     currentAmount -= extractedAmount;
 
-    // Update the struct
     result.rType = resourceType;
     result.amount = extractedAmount;
 
@@ -54,7 +48,6 @@ FResourcePair ABase_Resource::ExtractResource_Implementation(float AmountToExtra
            currentAmount,
            maxAmount);
 
-    // Optional: Visual feedback or destruction when depleted
     if (currentAmount <= 0.0f)
     {
         OnResourceDepleted();
@@ -67,16 +60,6 @@ void ABase_Resource::OnResourceDepleted()
 {
     UE_LOG(LogTemp, Warning, TEXT("Resource %s has been fully depleted!"), *GetName());
     
-    // Optional: Hide the resource or mark it as depleted
-    // SetActorHiddenInGame(true);
-    // SetActorEnableCollision(false);
-    
-    // Optional: Destroy after a delay
-    // FTimerHandle DestroyTimer;
-    // GetWorld()->GetTimerManager().SetTimer(DestroyTimer, [this]()
-    // {
-    //     Destroy();
-    // }, 2.0f, false);
 }
 
 float ABase_Resource::GetRemainingAmount() const

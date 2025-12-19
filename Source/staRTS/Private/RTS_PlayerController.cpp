@@ -24,7 +24,6 @@ void ARTS_PlayerController::BeginPlay()
     Super::BeginPlay();
     rtsHUD = Cast<ARTS_HUD>(GetHUD());
     
-    // Find default storage at start (optional)
     FindDefaultStorage();
 }
 
@@ -102,18 +101,15 @@ void ARTS_PlayerController::CommandSelectedActors(const FInputActionValue& value
 
     UE_LOG(LogTemp, Warning, TEXT("Command: TargetActor = %s"), 
            targetActor ? *targetActor->GetName() : TEXT("NULL"));
-
-    // Handle multiple selected actors
+    
     if (currentlySelectedActors.Num() > 0)
     {
         for (AActor* selectedActor : currentlySelectedActors)
         {
-            // VERIFICACIÓN CRÍTICA
             if (IsValid(selectedActor) && selectedActor->Implements<UIWorkerInterface>())
             {
                 UE_LOG(LogTemp, Warning, TEXT("Enviando orden a Worker válido: %s"), *selectedActor->GetName());
-        
-                // Usar la forma estática de la interfaz es más seguro
+                
                 IIWorkerInterface::Execute_GatherResource(selectedActor, targetActor);
             }
             else
@@ -126,7 +122,6 @@ void ARTS_PlayerController::CommandSelectedActors(const FInputActionValue& value
     {
         if (GetHitResultUnderCursor(ECC_Visibility, false, hitResult))
         {
-            // LOG DE PRUEBA
             UE_LOG(LogTemp, Warning, TEXT("MOUSE CLICK: Actor=%s, Location=%s"), 
                    targetActor ? *targetActor->GetName() : TEXT("Suelo"), 
                    *hitResult.ImpactPoint.ToString());
@@ -135,8 +130,7 @@ void ARTS_PlayerController::CommandSelectedActors(const FInputActionValue& value
         }
         ProcessCommand(hitActor, targetActor, hitResult.ImpactPoint);
     }
-
-    // Cooldown
+    
     bIsIssuingCommand = true;
     GetWorld()->GetTimerManager().SetTimer(CommandCooldownTimer, [this]()
     {
@@ -160,8 +154,7 @@ void ARTS_PlayerController::ProcessCommand(AActor* CommandedActor, AActor* Targe
 
     bool bIsWorker = CommandedActor->Implements<UIWorkerInterface>();
     bool bCanMove = CommandedActor->Implements<UNavegable_Interface>();
-
-    // PRIORITY 1: Command on Resource (SOLO SI HAY TARGET)
+    
     if (bIsWorker && TargetActor && IsValid(TargetActor))
     {
         UE_LOG(LogTemp, Log, TEXT("Checking if target is resource..."));
@@ -176,8 +169,7 @@ void ARTS_PlayerController::ProcessCommand(AActor* CommandedActor, AActor* Targe
                 UE_LOG(LogTemp, Error, TEXT("Failed to cast to ABase_Pawn!"));
                 return;
             }
-
-            // Ensure storage
+            
             if (!WorkerPawn->TargetStorageActor)
             {
                 if (DefaultStorageActor && IsValid(DefaultStorageActor))
@@ -204,7 +196,6 @@ void ARTS_PlayerController::ProcessCommand(AActor* CommandedActor, AActor* Targe
                    *CommandedActor->GetName(), *TargetActor->GetName());
             
             IIWorkerInterface::Execute_GatherResource(CommandedActor, TargetActor);
-            
             UE_LOG(LogTemp, Log, TEXT("Execute_GatherResource returned successfully"));
             return;
         }
@@ -220,8 +211,7 @@ void ARTS_PlayerController::ProcessCommand(AActor* CommandedActor, AActor* Targe
         if (!TargetActor)
             UE_LOG(LogTemp, Log, TEXT("No target actor - will move to location"));
     }
-
-    // PRIORITY 2: Storage
+    
     if (bIsWorker && TargetActor && IsValid(TargetActor))
     {
         if (TargetActor->Implements<UIStorageInterface>())
@@ -354,7 +344,6 @@ void ARTS_PlayerController::SelectMultipleActors()
 {
     if (rtsHUD)
     {
-        // Deselect all previously selected actors
         for (AActor* anActor : currentlySelectedActors)
         {
             if (anActor && anActor->GetClass()->ImplementsInterface(UISelectable::StaticClass()))
@@ -362,8 +351,7 @@ void ARTS_PlayerController::SelectMultipleActors()
                 IISelectable::Execute_SelectActor(anActor, false);
             }
         }
-
-        // Get and select new actors
+        
         TArray<AActor*> allSelectedActors = rtsHUD->GetSelectedActors();
 
         for (AActor* anActor : allSelectedActors)

@@ -25,16 +25,14 @@ public:
 
     bool bIsIssuingCommand = false;
     FTimerHandle CommandCooldownTimer;
-
-    // Set a default storage for all workers
+    
     UFUNCTION(BlueprintCallable, Category = "RTS")
     void SetDefaultStorage(AActor* StorageActor);
 
 protected:
     virtual void BeginPlay() override;
     virtual void SetupInputComponent() override;
-
-    // Input Actions
+    
     void Select(const FInputActionValue& value);
     void CommandSelectedActors(const FInputActionValue& value);
     void SelectStart(const FInputActionValue& value);
@@ -42,7 +40,6 @@ protected:
     void SelectEnd(const FInputActionValue& value);
     void SelectMultipleActors();
 
-    // Helper Functions
     void ProcessCommand(AActor* CommandedActor, AActor* TargetActor, FVector TargetLocation);
     AActor* FindNearestStorage(FVector FromLocation);
     void FindDefaultStorage();
