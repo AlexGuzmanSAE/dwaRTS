@@ -40,15 +40,12 @@ class STARTS_API ABase_Building : public AActor, public IISelectable, public IIS
 	FVector buildAreaExtents = FVector(500.f, 500.f, 500.f);
 
 public:	
-	// Sets default values for this actor's properties
 	ABase_Building();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void SelectActor_Implementation(const bool isSelected);

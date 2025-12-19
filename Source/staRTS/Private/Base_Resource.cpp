@@ -4,7 +4,7 @@ ABase_Resource::ABase_Resource()
 {
     PrimaryActorTick.bCanEverTick = false;
     
-    resourceType = EResourceType::Gold;
+    resourceType = EResourceType::Wood;
     currentAmount = 1000.0f;
     maxAmount = 1000.0f;
 }
@@ -12,8 +12,6 @@ ABase_Resource::ABase_Resource()
 void ABase_Resource::BeginPlay()
 {
     Super::BeginPlay();
-    
-    currentAmount = maxAmount;
     
     structTypePair = FResourcePair(resourceType, currentAmount);
 }
@@ -26,7 +24,7 @@ void ABase_Resource::Tick(float DeltaTime)
 FResourcePair ABase_Resource::ExtractResource_Implementation(float AmountToExtract)
 {
     FResourcePair result;
-    
+    UE_LOG(LogTemp, Error, TEXT("current amount: %f "), currentAmount);
     if (currentAmount <= 0.0f)
     {
         result.rType = EResourceType::None;
@@ -37,7 +35,7 @@ FResourcePair ABase_Resource::ExtractResource_Implementation(float AmountToExtra
     
     float extractedAmount = FMath::Min(AmountToExtract, currentAmount);
     currentAmount -= extractedAmount;
-
+    UE_LOG(LogTemp, Warning, TEXT("current amount: %f "), currentAmount);
     result.rType = resourceType;
     result.amount = extractedAmount;
 
@@ -52,7 +50,7 @@ FResourcePair ABase_Resource::ExtractResource_Implementation(float AmountToExtra
     {
         OnResourceDepleted();
     }
-
+    UE_LOG(LogTemp, Warning, TEXT("current amount: %f "), result.amount);
     return result;
 }
 

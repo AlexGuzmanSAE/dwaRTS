@@ -47,7 +47,6 @@ void ABase_Pawn::BeginPlay()
 {
     Super::BeginPlay();
     
-    // Inicialización de variables
     TargetResourceActor = nullptr;
     TargetStorageActor = nullptr;
     AvailableResources.Empty();
@@ -120,12 +119,6 @@ void ABase_Pawn::MoveToLocation_Implementation(const FVector targetLocation)
 {
     if (!IsValid(this)) return;
 
-    if (CurrentWorkerState != EWorkerState::Idle)
-    {
-        if (CurrentWorkerState == EWorkerState::Gathering) StopGathering();
-        CurrentWorkerState = EWorkerState::Idle;
-    }
-
     moveTargetLocation = targetLocation + FVector(0, 0, GetDefaultHalfHeight());
 
     AController* CurrentController = GetController();
@@ -172,6 +165,7 @@ void ABase_Pawn::GatherResource_Implementation(AActor* ResourceActor)
     
     UE_LOG(LogTemp, Log, TEXT("SUCCESS: Worker %s assigned to gather from %s"), 
            *GetName(), *TargetResourceActor->GetName());
+    
 }
 
 void ABase_Pawn::DeliverResource_Implementation(AActor* StorageActor)
@@ -196,8 +190,7 @@ void ABase_Pawn::DeliverResource_Implementation(AActor* StorageActor)
 
     TargetStorageActor = StorageActor;
     CurrentWorkerState = EWorkerState::MovingToStorage;
-    
-    // Move to storage
+   
     FVector storageLocation = TargetStorageActor->GetActorLocation();
     MoveToLocation_Implementation(storageLocation);
     
@@ -222,8 +215,7 @@ void ABase_Pawn::UpdateWorkerState()
             CurrentWorkerState = EWorkerState::Idle;
             break;
         }
-        
-        if (GetDistanceTo(TargetResourceActor) <= GatheringRange)
+        if (GetDistanceTo(TargetResourceActor) <= 300.f)
         {
             CurrentWorkerState = EWorkerState::Gathering;
         
@@ -329,7 +321,7 @@ AActor* ABase_Pawn::GetBestResource()
             continue;
         }
         
-        FResourcePair testExtract = IResourceCollectable::Execute_ExtractResource(Resource, 0.0f);
+        FResourcePair testExtract = IResourceCollectable::Execute_ExtractResource(Resource, 100.0f);
         if (testExtract.rType != EResourceType::None)
         {
             ValidResources.Add(Resource);
@@ -485,6 +477,17 @@ void ABase_Pawn::ProcessGathering()
             CurrentWorkerState = EWorkerState::Idle;
         }
         return;
+    }
+    
+    UE_LOG(LogTemp, Warning, TEXT("Intentando extraer de: %s"), *TargetResourceActor->GetName());
+
+    if (TargetResourceActor->GetClass()->ImplementsInterface(UResourceCollectable::StaticClass()))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("El Actor SI implementa la interfaz correctamente"));
+    }
+    else 
+    {
+        UE_LOG(LogTemp, Error, TEXT("El Actor NO implementa la interfaz en este momento"));
     }
     
     if (IsValid(TargetResourceActor))

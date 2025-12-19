@@ -15,15 +15,7 @@ class USkeletalMeshComponent;
 class UFloatingPawnMovement;
 class AAIController;
 
-UENUM(BlueprintType)
-enum class EWorkerState : uint8
-{
-    Idle UMETA(DisplayName = "Idle"),
-    MovingToResource UMETA(DisplayName = "Moving To Resource"),
-    Gathering UMETA(DisplayName = "Gathering"),
-    MovingToStorage UMETA(DisplayName = "Moving To Storage"),
-    Delivering UMETA(DisplayName = "Delivering")
-};
+
 
 UCLASS()
 class STARTS_API ABase_Pawn : public APawn, public IISelectable, public INavegable_Interface, public IIWorkerInterface
@@ -54,12 +46,10 @@ protected:
     bool bMoving = false;
     float minDistanceToTarget = 150.f;
     float interpSpeed = 5.f;
-
-    // Worker State Management
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "RTS | Worker")
     EWorkerState CurrentWorkerState = EWorkerState::Idle;
-
-    // Inventory
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "RTS | Inventory")
     EResourceType CurrentResourceType = EResourceType::None;
 
@@ -76,7 +66,7 @@ protected:
     float GatheringRange = 250.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RTS | Gathering")
-    float DeliveryRange = 200.0f;
+    float DeliveryRange = 450.0f;
 public:
     UFUNCTION()
     AActor* GetBestResource();

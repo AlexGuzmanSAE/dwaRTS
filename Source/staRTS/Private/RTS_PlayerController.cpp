@@ -59,8 +59,7 @@ void ARTS_PlayerController::Select(const FInputActionValue& value)
 {
     FHitResult hitResult;
     GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, false, hitResult);
-
-    // Deselect previous actor
+    
     if (hitActor)
     {
         if (hitActor->GetClass()->ImplementsInterface(UISelectable::StaticClass()))
@@ -190,8 +189,7 @@ void ARTS_PlayerController::ProcessCommand(AActor* CommandedActor, AActor* Targe
                     }
                 }
             }
-
-            // LLAMAR GatherResource - con log
+            
             UE_LOG(LogTemp, Warning, TEXT("CALLING Execute_GatherResource: Worker=%s, Resource=%s"), 
                    *CommandedActor->GetName(), *TargetActor->GetName());
             
@@ -282,7 +280,7 @@ void ARTS_PlayerController::FindDefaultStorage()
 
     if (FoundStorages.Num() > 0)
     {
-        // Use the first one found as default, or find one tagged as "MainStorage"
+
         for (AActor* Storage : FoundStorages)
         {
             if (Storage->ActorHasTag(FName("MainStorage")))
@@ -293,7 +291,6 @@ void ARTS_PlayerController::FindDefaultStorage()
             }
         }
 
-        // If no main storage tagged, use first one
         DefaultStorageActor = FoundStorages[0];
         UE_LOG(LogTemp, Log, TEXT("Using default storage: %s"), *DefaultStorageActor->GetName());
     }

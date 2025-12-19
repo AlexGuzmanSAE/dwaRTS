@@ -27,7 +27,7 @@ void ABase_Building::BeginPlay()
 	
 }
 
-// Called every frame
+
 void ABase_Building::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

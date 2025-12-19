@@ -29,3 +29,13 @@ struct FResourcePair
     FResourcePair(EResourceType InType, float InAmount)
         : rType(InType), amount(InAmount) {}
 };
+
+UENUM(BlueprintType)
+enum class EWorkerState : uint8
+{
+    Idle UMETA(DisplayName = "Idle"),
+    MovingToResource UMETA(DisplayName = "Moving To Resource"),
+    Gathering UMETA(DisplayName = "Gathering"),
+    MovingToStorage UMETA(DisplayName = "Moving To Storage"),
+    Delivering UMETA(DisplayName = "Delivering")
+};

@@ -15,8 +15,7 @@ class STARTS_API ABase_Resource : public AActor, public IResourceCollectable
     
 public: 
 	ABase_Resource();
-
-	// Resource configuration
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 	EResourceType resourceType;
 
@@ -31,17 +30,14 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Resource")
 	FResourcePair structTypePair;
-
-	// Called when resource is fully depleted
+	
 	virtual void OnResourceDepleted();
 
 public: 
 	virtual void Tick(float DeltaTime) override;
-
-	// IResourceCollectable Interface
+	
 	virtual FResourcePair ExtractResource_Implementation(float AmountToExtract) override;
-
-	// Blueprint accessible functions
+	
 	UFUNCTION(BlueprintCallable, Category = "Resource")
 	float GetRemainingAmount() const;
 
